@@ -2,6 +2,10 @@ import { UserPayload } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
+import Navbar from "@/components/Navbar";
+import SearchBar from "@/components/SearchBar";
+import ArticlesContainer from "@/components/ArticlesContainer";
+import { FaPlus } from "react-icons/fa";
 
 export default function Home() {
   const [user, setUser] = useState<UserPayload | null>(null);
@@ -30,6 +34,10 @@ export default function Home() {
     }
   };
 
+  const handleSearch = (term: string, searchBy: string) => {
+    console.log(`Searching for "${term}" by ${searchBy}`);
+    // Aquí irá la lógica para realizar la búsqueda
+  };
 
   useEffect(() => {
     getProfile();
@@ -37,10 +45,26 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Hola {user ? user.username : 'Invitado'}</h1>
-      <button onClick={handleLogout}>
-        Logout
-      </button>
+      {user ? (
+        <>
+          <Navbar username={user.username} onLogout={handleLogout} />
+          <div className="p-6 flex justify-between items-center">
+            <SearchBar onSearch={handleSearch} />
+
+            <button
+              onClick={() => router.push('/articles/new')}
+              className="flex items-center p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+            >
+              <FaPlus className="mr-2" /> Add Article
+            </button>
+
+          </div>
+
+          <ArticlesContainer />
+        </>
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </div>
   );
 }

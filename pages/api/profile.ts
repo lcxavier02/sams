@@ -17,6 +17,7 @@ export default function handle(
 
     return res.status(200).json({
       username: user.username,
+      id: user.id,
     });
   } catch (error) {
     return res.status(401).json({ message: 'Invalid token' });

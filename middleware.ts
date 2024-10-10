@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
 // Definir las rutas protegidas
-const protectedRoutes = ['/'];
+const protectedRoutes = ['/', '/api/articles/:path*', '/articles/:path*'];
 
 // Función para verificar el JWT usando jose
 async function verifyJWT(token: string) {
@@ -34,5 +34,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/'],
+  matcher: ['/', '/api/articles/:path*', '/articles/:path*'],
 };

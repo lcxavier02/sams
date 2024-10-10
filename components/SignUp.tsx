@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 function SignUp() {
   const [user, setUser] = useState({
@@ -12,6 +13,7 @@ function SignUp() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser({
@@ -25,7 +27,6 @@ function SignUp() {
     setError('');
     setSuccess('');
 
-    // Verificar si las contraseñas coinciden
     if (user.password !== user.confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;
@@ -42,7 +43,7 @@ function SignUp() {
         password: user.password,
       });
 
-      setSuccess('Registro exitoso. ¡Ahora puedes iniciar sesión!');
+      setSuccess('Sig up successful.');
       setUser({
         first_name: '',
         last_name: '',
@@ -50,64 +51,113 @@ function SignUp() {
         password: '',
         confirmPassword: '',
       });
+
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Error en el registro');
+      setError(error.response?.data?.message || 'Error in the sign up');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleLogInRedirect = () => {
+    router.push('/login');
+  };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          name='first_name'
-          type='text'
-          placeholder='First name'
-          value={user.first_name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name='last_name'
-          type='text'
-          placeholder='Last name'
-          value={user.last_name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name='username'
-          type='text'
-          placeholder='Username'
-          value={user.username}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name='password'
-          type='password'
-          placeholder='Password'
-          value={user.password}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name='confirmPassword'
-          type='password'
-          placeholder='Confirm password'
-          value={user.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-        <button type='submit' disabled={loading}>
-          {loading ? 'Registrando...' : 'Sign Up'}
-        </button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {success && <p style={{ color: 'green' }}>{success}</p>}
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6">Create an account</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-700">First Name</label>
+            <input
+              name='first_name'
+              type='text'
+              placeholder='First name'
+              value={user.first_name}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Last Name</label>
+            <input
+              name='last_name'
+              type='text'
+              placeholder='Last name'
+              value={user.last_name}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Username</label>
+            <input
+              name='username'
+              type='text'
+              placeholder='Username'
+              value={user.username}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Password</label>
+            <input
+              name='password'
+              type='password'
+              placeholder='Password'
+              value={user.password}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Confirm Password</label>
+            <input
+              name='confirmPassword'
+              type='password'
+              placeholder='Confirm password'
+              value={user.confirmPassword}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            type='submit'
+            disabled={loading}
+            className={`w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {loading ? 'Registrando...' : 'Sign Up'}
+          </button>
+          {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+          {success && <p className="text-green-500 text-center mt-4">{success}</p>}
+        </form>
+
+        <div className="mt-4 text-center">
+          <p className="text-gray-600">
+            Already have an account?{' '}
+            <button
+              type="button"
+              onClick={handleLogInRedirect}
+              className="text-blue-500 hover:underline"
+            >
+              Log in
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
 export default SignUp;
