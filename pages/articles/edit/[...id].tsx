@@ -4,7 +4,18 @@ import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
 import { FaTrash } from 'react-icons/fa';
 
-const EditArticle = () => {
+
+/**
+ * EditArticle Component
+ * 
+ * This component allows the user to edit an article, update its information, and delete it.
+ * It uses a form to display and edit the article's details, including title, authors, publication date,
+ * keywords, abstract, journal, DOI, and pages. It also includes functionality to delete the article with a confirmation modal.
+ *
+ * @component
+ * @returns {JSX.Element} - The rendered component for editing an article.
+ */
+const EditArticle = (): JSX.Element => {
   const [article, setArticle] = useState({
     title: '',
     authors: '',
@@ -16,10 +27,17 @@ const EditArticle = () => {
     pages: '',
   });
   const [error, setError] = useState('');
-  const [showModal, setShowModal] = useState(false); // Controlar el modal
+  const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState<{ username: string } | null>(null);
   const router = useRouter();
   const { id } = router.query;
+
+  /**
+   * useEffect for fetching the user profile and the article data.
+   * 
+   * Fetches the user profile to ensure the logged-in user is authenticated.
+   * Fetches the article data based on the article's `id` from the query parameters.
+   */
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -37,7 +55,6 @@ const EditArticle = () => {
         const response = await axios.get(`/api/articles/?id=${id}`, { withCredentials: true });
         const articleData = response.data;
 
-        // Convertir la fecha a formato "yyyy-MM-dd"
         const formattedDate = new Date(articleData.publication_date).toISOString().split('T')[0];
 
         setArticle({
@@ -62,6 +79,11 @@ const EditArticle = () => {
     }
   }, [id]);
 
+  /**
+   * Handle input changes in the form fields.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>} e - Event object for the input change.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setArticle({
       ...article,
@@ -69,6 +91,11 @@ const EditArticle = () => {
     });
   };
 
+  /**
+   * Handle form submission to update the article details.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} e - Event object for the form submission.
+   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -87,16 +114,22 @@ const EditArticle = () => {
     }
   };
 
+  /**
+   * Handle article deletion with confirmation modal.
+   */
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/articles/?id=${id}`, { withCredentials: true });
-      setShowModal(false); // Cerrar el modal
-      router.push('/'); // Redirigir a la lista de artículos después de eliminar
+      setShowModal(false);
+      router.push('/');
     } catch (err) {
       setError('Error deleting article');
     }
   };
 
+  /**
+   * Handle cancel button to navigate back to the articles list.
+   */
   const handleCancel = () => {
     router.push('/');
   };
@@ -104,7 +137,7 @@ const EditArticle = () => {
   return (
     <div>
       {user && <Navbar username={user.username} onLogout={() => router.push('/login')} />}
-      <div className="container mx-auto mt-6">
+      <div className="container mx-auto mt-6 p-6">
         <h1 className="text-2xl font-bold mb-4">Edit Article</h1>
         {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">

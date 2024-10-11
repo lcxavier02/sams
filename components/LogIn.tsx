@@ -2,7 +2,18 @@ import React, { FormEventHandler, ChangeEvent, useState } from 'react'
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
-function LogIn() {
+/**
+ * LogIn component renders a login form for the user to authenticate.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <LogIn />
+ * )
+ * 
+ * @returns {JSX.Element} The login form component.
+ */
+function LogIn(): JSX.Element {
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
@@ -12,6 +23,11 @@ function LogIn() {
   const [success, setSuccess] = useState('');
   const router = useRouter();
 
+  /**
+   * handleChange handles all the changes in the form fields.
+   * 
+   * @param {ChangeEvent<HTMLInputElement>} e - The change event for the input element.
+   */
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCredentials({
       ...credentials,
@@ -19,6 +35,12 @@ function LogIn() {
     })
   };
 
+  /**
+   * handleSubmit handles the submit event for the form.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} e - The event for the form.
+   * @async
+   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -32,7 +54,6 @@ function LogIn() {
     }
 
     try {
-      // Enviar los datos de inicio de sesión
       const response = await axios.post('/api/auth/login', credentials, {
         withCredentials: true,
       });
@@ -50,6 +71,9 @@ function LogIn() {
     }
   };
 
+  /**
+   * handleSignUpRedirect redirects the user to the Sign Up page if no account.
+   */
   const handleSignUpRedirect = () => {
     router.push('/signup');
   };
@@ -88,7 +112,7 @@ function LogIn() {
             disabled={loading}
             className={`w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {loading ? 'Iniciando sesión...' : 'Log In'}
+            {loading ? 'Logging in...' : 'Log In'}
           </button>
           {error && <p className="text-red-500 text-center mt-4">{error}</p>}
           {success && <p className="text-green-500 text-center mt-4">{success}</p>}

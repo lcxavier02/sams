@@ -5,6 +5,22 @@ interface ProfileProps {
   onLogout: () => void;
 }
 
+/**
+ * Profile component that displays the user's initials and a logout button.
+ * When clicked, it shows a dropdown for logging out, and it closes when clicked outside.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <Profile username="John Doe" onLogout={handleLogout} />
+ * )
+ * 
+ * @param {Object} props - Component properties
+ * @param {string} props.username - The username of the logged-in user
+ * @param {Function} props.onLogout - Function to handle the user logout
+ * 
+ * @returns {JSX.Element} The Profile component with a logout dropdown
+ */
 const Profile: React.FC<ProfileProps> = ({ username, onLogout }) => {
   const [showLogout, setShowLogout] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -14,15 +30,20 @@ const Profile: React.FC<ProfileProps> = ({ username, onLogout }) => {
     .map((name) => name[0].toUpperCase())
     .join('');
 
+  /**
+   * Toggle the logout button dropdown visibility
+   */
   const handleProfileClick = () => {
     setShowLogout(!showLogout);
   };
 
-  // Manejar el clic fuera del área del perfil para cerrar el menú de logout
+  /**
+   * Handles clicking outside the profile component to close the dropdown
+   */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setShowLogout(false); // Cerrar el menú de logout si se hace clic fuera
+        setShowLogout(false);
       }
     };
 

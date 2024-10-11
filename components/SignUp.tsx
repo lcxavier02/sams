@@ -2,7 +2,20 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
-function SignUp() {
+/**
+ * SignUp component for creating a new user account.
+ * Includes form fields for first name, last name, username, password, and confirm password.
+ * Displays success or error messages based on the outcome of the registration process.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <SignUp />
+ * )
+ * 
+ * @returns {JSX.Element} The SignUp component renders a form for user registration.
+ */
+function SignUp(): JSX.Element {
   const [user, setUser] = useState({
     first_name: '',
     last_name: '',

@@ -1,6 +1,17 @@
 import mongoose from "mongoose";
 
-export function mongooseConnect() {
+/**
+ * Establishes a connection to the MongoDB database using the Mongoose library.
+ * 
+ * This function checks if the environment variable `MONGODB_URI` is defined, and if so,
+ * it establishes a connection to the MongoDB database using that URI.
+ * 
+ * @throws {Error} Throws an error if the `MONGODB_URI` environment variable is not defined.
+ * 
+ * @returns {Promise<mongoose.Connection> | Promise<typeof mongoose>} Returns a promise that resolves to the current or new mongoose connection.
+ * 
+ */
+export function mongooseConnect(): Promise<mongoose.Connection> | Promise<typeof mongoose> {
   const uri = process.env.MONGODB_URI;
 
   if (!uri) {

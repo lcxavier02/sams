@@ -4,7 +4,18 @@ import { useRouter } from 'next/router';
 import { UserPayload } from '@/types';
 import Navbar from '@/components/Navbar';
 
-function NewArticle() {
+
+/**
+ * NewArticle Component
+ * 
+ * This component allows the user to create a new article by submitting a form. 
+ * The form contains fields for article details such as title, authors, publication date, keywords, abstract, journal, DOI, and pages. 
+ * It also includes functionality to cancel the form submission and return to the main page.
+ *
+ * @component
+ * @returns {JSX.Element} - The rendered form for creating a new article.
+ */
+function NewArticle(): JSX.Element {
   const [formData, setFormData] = useState({
     id: '',
     title: '',
@@ -21,7 +32,11 @@ function NewArticle() {
   const [user, setUser] = useState<UserPayload | null>(null);
   const router = useRouter();
 
-  // Obtener el perfil del usuario
+  /**
+   * useEffect to fetch the user profile data.
+   * 
+   * This hook fetches the logged-in user profile data upon component mount.
+   */
   useEffect(() => {
     const getUserProfile = async () => {
       try {
@@ -36,6 +51,11 @@ function NewArticle() {
     getUserProfile();
   }, []);
 
+  /**
+   * Handle input changes for the form fields.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>} e - Event object for input change.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
@@ -43,6 +63,11 @@ function NewArticle() {
     });
   };
 
+  /**
+   * Handle form submission to create a new article.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} e - Event object for form submission.
+   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -62,6 +87,9 @@ function NewArticle() {
     }
   };
 
+  /**
+   * Handle cancel button to navigate back to the articles list.
+   */
   const handleCancel = () => {
     router.push('/');
   };
@@ -69,7 +97,7 @@ function NewArticle() {
   return (
     <div>
       {user && <Navbar username={user.username} onLogout={() => router.push('/login')} />}
-      <div className="container mx-auto mt-6">
+      <div className="container mx-auto mt-6 p-6">
         <h1 className="text-2xl font-bold mb-4">Create a New Article</h1>
         {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">

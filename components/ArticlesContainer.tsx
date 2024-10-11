@@ -1,27 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { ArticlePayload } from '@/types';
 
-const ArticlesContainer: React.FC = () => {
-  const [articles, setArticles] = useState<ArticlePayload[]>([]);
-  const [error, setError] = useState('');
+interface ArticlesContainerProps {
+  searchResults: ArticlePayload[];
+}
+
+/**
+ * ArticlesContainer component displays a list of articles based on search results.
+ *
+ * @component
+ * @example
+ * // Example usage:
+ * const searchResults = [
+ *   {
+ *     _id: 'article-id-1',
+ *     title: 'Understanding Quantum Mechanics',
+ *     authors: ['John Doe', 'Jane Smith'],
+ *     journal: 'Physics Today',
+ *     keywords: ['physics', 'quantum'],
+ *   },
+ *   {
+ *     _id: 'article-id-2',
+ *     title: 'Introduction to Machine Learning',
+ *     authors: ['Alice', 'Bob'],
+ *     journal: 'AI Journal',
+ *     keywords: ['machine learning', 'AI'],
+ *   }
+ * ];
+ *
+ * <ArticlesContainer searchResults={searchResults} />
+ *
+ * @param {ArticlesContainerProps} props - The props for the component.
+ * @returns {React.FC} A functional component that displays a list of articles.
+ */
+const ArticlesContainer: React.FC<ArticlesContainerProps> = ({ searchResults }) => {
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await axios.get('/api/articles', { withCredentials: true });
-        setArticles(response.data);
-      } catch (err) {
-        console.error('Error fetching articles:', err);
-        setError('Error fetching articles');
-      }
-    };
-
-    fetchArticles();
-  }, []);
-
+  /**
+   * Handles clicking on an article, navigating to the edit page for that article.
+   *
+   * @param {string} _id - The ID of the article to navigate to for editing.
+   */
   const handleArticleClick = (_id: string) => {
     router.push(`/articles/edit/${_id}`);
   };
@@ -30,12 +50,11 @@ const ArticlesContainer: React.FC = () => {
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-4">Articles</h2>
       <div className="border border-gray-300 rounded-lg p-4">
-        {error && <p className="text-red-500">{error}</p>}
-        {articles.length === 0 ? (
+        {searchResults.length === 0 ? (
           <p>No articles found.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {articles.map((article) => (
+            {searchResults.map((article) => (
               <div
                 key={article._id}
                 className="border rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition"
